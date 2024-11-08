@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+import json
 
 # Load .env file, this holds the secret keys and other important variables
 load_dotenv()
@@ -22,9 +23,14 @@ messages = [
 
 result = model.invoke(messages)
 
-parser = StrOutputParser()
+# a method to strip the json top and bottom headers from the response
+def strip_json_headers(response):
+    return response.strip("```json").strip("```")
 
-parsedResult = parser.invoke(result)
-
-print("Parsed Result: ", parsedResult)
+# Try to parse the result into a JSON object
+try:
+    parsedResult = json.loads(strip_json_headers(result.content))  # Parse the response content into a structured JSON object
+    print("Parsed Result: ", parsedResult)
+except json.JSONDecodeError as e:
+    print("Error parsing JSON")
 
