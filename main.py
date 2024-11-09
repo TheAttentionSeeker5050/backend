@@ -10,6 +10,7 @@ load_dotenv()
 from fastapi import FastAPI, HTTPException
 from MyLLM import build_news_prompt, model
 from langchain_core.output_parsers import StrOutputParser
+from fastapi.middleware.cors import CORSMiddleware
 
 # Make the FastAPI REST API
 app = FastAPI(
@@ -17,6 +18,9 @@ app = FastAPI(
   version="1.0",
   description="A simple API server using LangChain's Runnable interfaces for the web application 3 news, which 3 news with ai, unbiased and fast.",
 )
+
+# Set cors as any if in development
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"]) 
 
 
 # API route to process the news query
